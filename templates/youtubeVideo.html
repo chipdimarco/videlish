@@ -1,0 +1,17 @@
+<iframe class="video-iframe" id="youtube-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{recipe.hostId}}?autoplay=1&enablejsapi=1&rel=0&controls=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
+<script type="text/javascript">
+  var tag = document.createElement('script');
+  tag.id = 'iframe-youtube';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('youtube-iframe');
+  }
+  
+  function stopVideoPlaybackOnClose() {
+    player.stopVideo();
+  }
+</script>

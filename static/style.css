@@ -1,0 +1,94 @@
+body
+{
+    background-color: #CCCCCC;
+}
+.header
+{
+    background-color:	#FF6600;
+    padding-top:10px;
+}
+.header-btn
+{
+    border-style: none solid none none;
+    border-color: #ffb380;
+    border-width: 1px;
+    border-radius: 0px;
+    background:none;
+    padding-right:16px;
+    color:white;
+}
+.bento
+{
+    padding-top:  15px;
+    padding-bottom: 15px;
+}
+.recipe
+{
+    padding:15px;
+    border-radius: 5px;
+    background-color:white;
+}
+.recipeName
+{
+    font-size:22px;
+}
+.search
+{
+    
+    border-style: none solid none none;
+    border-color: #ffb380;
+    border-width: 1px;
+    border-radius: 0px;
+    background:none;
+    padding-right:16px;
+    color:white;
+}
+.search:hover
+{
+    color:#42C0FB;
+    border-color: #ffb380;
+    background:none;
+}
+.userNameButton
+{
+    border: none;
+    background:none;
+    color: white;
+}
+.userNameButton:hover
+{
+    color:#02265c;
+    background:none;
+}
+.siteContent
+{
+    position:relative;
+}
+.play {
+   position: absolute;
+    top: 50%;  /* position the top  edge of the element at the middle of the parent */
+    left: 50%; /* position the left edge of the element at the middle of the parent */
+
+    transform: translate(-50%, -50%); 
+}
+
+.btn-open-recipe
+{
+    padding:0px;
+    border:none;
+}
+.modal-content
+{
+    margin: 0 auto;
+    padding: 10pt;
+}
+.video-iframe
+{
+    margin: 0 auto;
+    display: block;
+}
+.like-btn
+{
+    border:none;
+    padding-left:0pt;
+}
