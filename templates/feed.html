@@ -23,6 +23,15 @@
  
             $( document ).ready(function() {
                 $(document).off('modal.data-api');
+                $('#popover').popover({ 
+                    html : true,
+                    title: function() {
+                      return $("#popover-head").html();
+                    },
+                    content: function() {
+                      return $("#popover-content").html();
+                    }
+                });
                 $(".btn-open-recipe").mouseover(function () {
                       $(this).children("img.play").attr('src', $(this).children("img.play").data("hover"));
                     }).mouseout(function () {
@@ -45,8 +54,8 @@
                       // Code to run if the request succeeds (is done);
                       // The response is passed to the function
                       .done(function( htmlResult ) {
-                          //$("#modalContent").html(htmlResult)
-                          $("#modalContent").prepend(htmlResult)
+                          $("#insertmodalhere").html(htmlResult)
+                          //$("#modalContent").prepend(htmlResult)
                           $('#modalVideo').modal('show') 
                       })
                       // Code to run if the request fails; the raw request and
@@ -78,12 +87,30 @@
                     <button type="button" class="btn btn-default search" aria-label="Search">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                     </button>
-                    <button type="button" class="btn btn-default plus" aria-label="Plus">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    </button>
+                    <a tabindex="0" id="popover" class="btn btn-default plus header-icon" aria-label="Plus" role="button" data-toggle="popover" data-placement="bottom">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </a>
+                    <div id="popover-head" class="hide">
+                        Add Video
+                    </div>
+                    <div id="popover-content" class="hide">
+                        <ul class="nav nav-pills">
+                            <li class="active"><a href="#">YouTube</a>
+                                <form action="{{ url_for('addVideo') }}" method = 'post'>
+                                    <label>YouTube Id</label>
+                                    <input type="text" class="add-video-textbox" name=youtube_id />
+                                    <label>Name</label>
+                                    <input type="text" class="add-video-textbox" name=video_name />
+                                    <label>Channel</label>
+                                    <input type="text" class="add-video-textbox" name=channel />
+                                    <input type="submit" value="submit"/>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="btn-group">
                       <button type="button" class="btn btn-default dropdown-toggle userNameButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                           Hi, {{Username}}! <span class="caret"></span>
+                           Hi, {{username}}! <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu">
                         <li><a href="#">My Recipes</a></li>
@@ -97,22 +124,7 @@
                 </div>
             </div>
             <div class="modal fade bs-example-modal-lg" id="modalVideo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div id="modalContent" class="modal-content">
-                    <h3 class='recipeName'>Recipe Name</h3>
-                        <h6>Recipe Credit</h6>
-                        <div class="row">
-                            <div class="col-xs-5">
-                                 <button type="button" class="btn btn-default" aria-label="Thumbs Up">
-                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-                                </button>
-                                145
-                            </div>
-                            <div class="col-xs-7 text-right">
-                                <h6>Jennifer Addams</h6>
-                            </div>
-                        </div>
-                    </div>
+                <div class="modal-dialog modal-lg" id="insertmodalhere" role="document">
                 </div>
             </div>
             <div class="row siteContent">

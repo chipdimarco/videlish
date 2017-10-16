@@ -32,6 +32,36 @@ body
 {
     font-size:22px;
 }
+.header-icon
+{
+    border: none;
+    background:none;
+    padding-right:16px;
+    color:white;
+}
+.header-icon:hover
+{
+    border-style: none;
+    background:none;
+    padding-right:16px;
+    color:blue;
+}
+.popover-title
+{
+    color:black;
+}
+.popover-content
+{
+    color:black;
+}
+.add-video-form
+{
+    margin-top: 2px;
+}
+.add-video-textbox
+{
+    width: 250px;
+}
 .search
 {
     

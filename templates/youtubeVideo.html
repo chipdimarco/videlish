@@ -1,3 +1,5 @@
+{% extends "modalVideo.html" %}
+{% block modalVideo %}
 <iframe class="video-iframe" id="youtube-iframe" width="560" height="315" src="https://www.youtube.com/embed/{{recipe.hostId}}?autoplay=1&enablejsapi=1&rel=0&controls=0&showinfo=0" frameborder="0" allowfullscreen></iframe>
 <script type="text/javascript">
   var tag = document.createElement('script');
@@ -15,3 +17,4 @@
     player.stopVideo();
   }
 </script>
+{% endblock %}

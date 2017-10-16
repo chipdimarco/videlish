@@ -24,10 +24,28 @@ def hello():
 
    return render_template('feedGeneric.html', recipes=recipes)
    
+@app.route("/mimic-logged-in")
+def logged_in():
+   #recipes = session.query(Recipe)
+   recipes = session.query(label('likeCount', func.count(Recipe.id)),Recipe.name,Recipe.id,Recipe.credit, Recipe.photo,label('user_name', Account.name)).outerjoin(RecipeLike).outerjoin(Account).group_by(Recipe.id).order_by(RecipeLike.create_date).all()
+
+   return render_template('feed.html', recipes=recipes, username='Emma')
+   
 @app.route("/getVideo/<int:recipe_id>")
 def getVideo(recipe_id):
     recipe = session.query(Recipe).filter_by(id=recipe_id).one()
     return render_template('youtubeVideo.html',recipe = recipe)
+    
+@app.route("/add_video", methods=['GET','POST'])
+def addVideo():
+    if request.method == 'POST':
+        if request.form['youtube_id'] and request.form['video_name']:
+            newRecipe = Recipe(hostId = request.form['youtube_id'], name=request.form['video_name'], host='YouTube', credit=request.form['channel'], photo='https://img.youtube.com/vi/' + request.form['youtube_id'] + '/mqdefault.jpg')
+            session.add(newRecipe)
+            session.commit()
+            flash( newRecipe.name + " edited!")
+    return redirect(url_for('logged_in'))
+
     
 @app.route("/yourpage")
 @login_required
