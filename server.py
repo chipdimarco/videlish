@@ -4,7 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import label
 from database_setup import Base, Recipe, RecipeLike, Account, User
 from flask.ext.security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
-
+import requests
+from credentials import youtubeApiKey
 
 app = Flask(__name__)
 
@@ -14,7 +15,6 @@ Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
 
  
 @app.route("/")
@@ -44,6 +44,20 @@ def addVideo():
             session.add(newRecipe)
             session.commit()
             flash( newRecipe.name + " edited!")
+    return redirect(url_for('logged_in'))
+
+
+@app.route("/find_youtube_video", methods=['GET','POST'])
+def findYoutubeVideo():
+    if request.form['youtube_id']:
+        r = requests.get('https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=' + request.form['youtube_id' ] + '&key=' + youtubeApiKey)
+        recipe = {
+            'name': r.json()['items'][0]['snippet']['title'],
+            'youtube_id': request.form['youtube_id'],
+            'credit': r.json()['items'][0]['snippet']['channelTitle'],
+            'photo': 'https://img.youtube.com/vi/' + request.form['youtube_id'] + '/mqdefault.jpg'
+        }
+        return render_template('confirmRecipe.html',recipe=recipe)
     return redirect(url_for('logged_in'))
 
     
