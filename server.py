@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect, flash, jso
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import label
+
 from database import db_session, init_db
 from models import Base, Recipe, RecipeLike, Account, User, Role
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required,  SQLAlchemySessionUserDatastore, utils
@@ -11,7 +12,8 @@ from flask_security import Security, current_user, login_required, \
      SQLAlchemySessionUserDatastore
 from database import db_session, init_db
 from models import User, Role
-
+import requests
+from credentials import youtubeApiKey
 
 
 # Create app
@@ -33,7 +35,6 @@ security = Security(app, user_datastore)
 def create_user():
     init_db()
 
-
  
 @app.route("/")
 def hello():
@@ -52,7 +53,7 @@ def logged_in():
    
 @app.route("/getVideo/<int:recipe_id>")
 def getVideo(recipe_id):
-    recipe = db.session.query(Recipe).filter_by(id=recipe_id).one()
+    recipe = db_session.query(Recipe).filter_by(id=recipe_id).one()
     return render_template('youtubeVideo.html',recipe = recipe)
     
 @app.route("/add_video", methods=['GET','POST'])
@@ -60,9 +61,23 @@ def addVideo():
     if request.method == 'POST':
         if request.form['youtube_id'] and request.form['video_name']:
             newRecipe = Recipe(hostId = request.form['youtube_id'], name=request.form['video_name'], host='YouTube', credit=request.form['channel'], photo='https://img.youtube.com/vi/' + request.form['youtube_id'] + '/mqdefault.jpg')
-            session.add(newRecipe)
-            session.commit()
+            db_session.add(newRecipe)
+            db_session.commit()
             flash( newRecipe.name + " edited!")
+    return redirect(url_for('logged_in'))
+
+
+@app.route("/find_youtube_video", methods=['GET','POST'])
+def findYoutubeVideo():
+    if request.form['youtube_id']:
+        r = requests.get('https://www.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id=' + request.form['youtube_id' ] + '&key=' + youtubeApiKey)
+        recipe = {
+            'name': r.json()['items'][0]['snippet']['title'],
+            'youtube_id': request.form['youtube_id'],
+            'credit': r.json()['items'][0]['snippet']['channelTitle'],
+            'photo': 'https://img.youtube.com/vi/' + request.form['youtube_id'] + '/mqdefault.jpg'
+        }
+        return render_template('confirmRecipe.html',recipe=recipe)
     return redirect(url_for('logged_in'))
 
     
