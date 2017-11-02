@@ -1,13 +1,10 @@
-import os
-import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, func, DateTime, Table, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from database import Base
+from flask_security import UserMixin, RoleMixin
 from sqlalchemy import create_engine
-from flask.ext.security import UserMixin, RoleMixin
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Boolean, DateTime, Column, Integer, \
+                       String, ForeignKey
 
-
-Base = declarative_base()
 
 
 class Recipe(Base):
@@ -29,29 +26,33 @@ class Account(Base):
     photo = Column(String, nullable=True)
  
 
-roles_users = Table('roles_users',Base.metadata, Column('user_id', Integer(), ForeignKey('user.id')), Column('role_id', Integer(), ForeignKey('role.id')))
-        
+class RolesUsers(Base):
+    __tablename__ = 'roles_users'
+    id = Column(Integer(), primary_key=True)
+    user_id = Column('user_id', Integer(), ForeignKey('user.id'))
+    role_id = Column('role_id', Integer(), ForeignKey('role.id'))
+
 class Role(Base, RoleMixin):
     __tablename__ = 'role'
     id = Column(Integer(), primary_key=True)
     name = Column(String(80), unique=True)
     description = Column(String(255))
 
-
-
-    
 class User(Base, UserMixin):
     __tablename__ = 'user'
-
     id = Column(Integer, primary_key=True)
-    email = Column(String(255), nullable=False)
-    account_id = Column(Integer, ForeignKey('account.id'))
-    account = relationship(Account)
+    email = Column(String(255), unique=True)
+    username = Column(String(255))
     password = Column(String(255))
+    last_login_at = Column(DateTime())
+    current_login_at = Column(DateTime())
+    last_login_ip = Column(String(100))
+    current_login_ip = Column(String(100))
+    login_count = Column(Integer)
     active = Column(Boolean())
     confirmed_at = Column(DateTime())
-    roles = relationship('Role', secondary=roles_users,
-                            backref=backref('users', lazy='dynamic'))
+    roles = relationship('Role', secondary='roles_users',
+                         backref=backref('users', lazy='dynamic'))
 
 class RecipeLike(Base):
     __tablename__ = 'recipeLike'
@@ -63,8 +64,4 @@ class RecipeLike(Base):
     recipe = relationship(Recipe)
      # define 'create_date' to default to now()
     create_date = Column(DateTime)
-
-engine = create_engine('sqlite:///videlish.db')
-
-Base.metadata.create_all(engine)
 
