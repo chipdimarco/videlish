@@ -12,7 +12,7 @@ from flask_security import Security, current_user, login_required, \
      SQLAlchemySessionUserDatastore
 from database import db_session, init_db
 from models import User, Role
-import requests
+# import requests
 from credentials import youtubeApiKey
 
 
@@ -38,10 +38,19 @@ def create_user():
  
 @app.route("/")
 def hello():
-   #recipes = session.query(Recipe)
-   recipes = db_session.query(label('likeCount', func.count(Recipe.id)),Recipe.name,Recipe.id,Recipe.credit, Recipe.photo,label('user_name', Account.name)).outerjoin(RecipeLike).outerjoin(Account).group_by(Recipe.id).order_by(RecipeLike.create_date).all()
+    #recipes = session.query(Recipe)
+    recipes = db_session.query(label('likeCount', func.count(Recipe.id)),
+                               Recipe.name,
+                               Recipe.id,
+                               Recipe.credit, 
+                               Recipe.photo,
+                               label('user_name', Account.name))\
+        .outerjoin(RecipeLike)\
+        .outerjoin(Account)\
+        .group_by(Recipe.id)\
+        .order_by(RecipeLike.create_date).all()
 
-   return render_template('feedGeneric.html', recipes=recipes)
+    return render_template('feedGeneric.html', recipes=recipes)
    
 @app.route("/mimic-logged-in")
 @login_required
@@ -86,8 +95,6 @@ def findYoutubeVideo():
 def yourpage():
     return render_template_string('Hello World!')
     
-    
 
- 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

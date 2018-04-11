@@ -1,0 +1,15 @@
+<div>
+    
+    <form action="{{ url_for('addVideo') }}" method = 'post'>
+    <label>YouTube Id</label>
+    <input type="text" class="add-video-textbox" name=youtube_id value="{{recipe.youtube_id}}" readonly/>
+        <img class="img-responsive" src={{recipe.photo}} >
+        <h4>{{recipe.name}}</h4>
+        <h6>{{recipe.credit}}</h6>
+        <label>Tags</label>
+        <input type="text" class="add-video-textbox" name=tags />
+        <input type="hidden" name=video_name value="{{recipe.name}}" />
+        <input type="hidden" name=channel value="{{recipe.channel}}" />
+        <input type="submit" value="confirm"/>
+    </form>
+</div>

@@ -1,0 +1,6 @@
+FROM python:3.4-alpine
+RUN  pip install flask-security flask-sqlalchemy
+RUN pip install requests
+WORKDIR /app
+ENTRYPOINT ["python3"]
+CMD ["app/app.py"]

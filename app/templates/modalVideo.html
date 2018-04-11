@@ -1,0 +1,16 @@
+<div id="modalContent" class="modal-content">
+    {% block modalVideo %}{% endblock %}
+    <h3 class='recipeName'>{{recipe.name}}</h3>
+    <h6>{{recipe.credit}}</h6>
+    <div class="row">
+        <div class="col-xs-5">
+             <button type="button" class="btn btn-default" aria-label="Thumbs Up">
+                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+            </button>
+            145
+        </div>
+        <div class="col-xs-7 text-right">
+            <h6>{{recipe.user_name}}</h6>
+        </div>
+    </div>
+</div>
